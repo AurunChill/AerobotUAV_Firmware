@@ -41,12 +41,6 @@ sudo apt install ros-kilted-desktop
 
 Настройка окружения:
 ```bash
-wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh
-sudo chmod +x install_geographiclib_datasets.sh
-sudo ./install_geographiclib_datasets.sh
-```
-
-```bash
 echo "source /opt/ros/kilted/setup.bash" >> ~/.bashrc && source ~/.bashrc
 ```
 
@@ -120,6 +114,11 @@ ros2 topic echo /clock
 
 
 ### 4. Установка MAVROS
+```bash
+wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh
+sudo chmod +x install_geographiclib_datasets.sh
+sudo ./install_geographiclib_datasets.sh
+```
 
 ```bash
 sudo apt install ros-kilted-mavros ros-kilted-mavros-extras
