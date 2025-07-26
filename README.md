@@ -41,6 +41,12 @@ sudo apt install ros-kilted-desktop
 
 Настройка окружения:
 ```bash
+wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh
+sudo chmod +x install_geographiclib_datasets.sh
+sudo ./install_geographiclib_datasets.sh
+```
+
+```bash
 echo "source /opt/ros/kilted/setup.bash" >> ~/.bashrc && source ~/.bashrc
 ```
 
@@ -132,6 +138,7 @@ ros2 topic list | grep mavros
 
 ### 5. Установка инструментов сборки
 ```bash
+sudo apt install colcon
 sudo apt install python3-colcon-common-extensions
 ```
 
@@ -201,7 +208,6 @@ MicroXRCEAgent udp4 -p 8888
 
 ```bash
 cd ~/PX4-Autopilot/ROMFS/px4fmu_common/init.d-posix/airframes
-touch 4022_gz_x500_mono_cam_forward_down_drone
 sudo nano 4022_gz_x500_mono_cam_forward_down_drone
 ```
 
@@ -225,6 +231,12 @@ sudo nano CMakeLists.txt
 
 <img width="822" height="577" alt="image" src="https://github.com/user-attachments/assets/a0150d66-4057-4265-ac5d-8c66895738c2" />
 
+Утверждаем изменения
+```bash
+cd ~/PX4-Autopilot
+make px4_sitl
+```
+
 
 ### 10. Настройка переменных окружения
 ```bash
@@ -233,12 +245,12 @@ source ~/.bashrc
 ```
 
 ### 11. Запуск
-Запустите QGroundControl
+Запустите QGroundControl. Не забудьте поставить виртуальные джойстики: Application Settings --> Fly View --> Virtual Joystick --> Enabled
 
 Далее:
 ```bash
 cd ~
-git clone https://github.com/AurunChill/Firmware2
+git clone https://github.com/AurunChill/AerobotUAV_Firmware
 cd ~/Firmware2
 chmod +x launch.sh
 ./launch.sh
