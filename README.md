@@ -50,6 +50,21 @@ ros2 --version
 # Должно вывести: ros2 <версия>
 ```
 
+```bash
+# Запуск демо-ноды talker/listener
+# Терминал 1:
+ros2 run demo_nodes_cpp talker
+```
+
+```bash
+# Терминал 2:
+ros2 run demo_nodes_cpp listener
+# Должны увидеть сообщения "Hello World"
+```
+
+<img width="1627" height="578" alt="image" src="https://github.com/user-attachments/assets/97e5179d-a928-4765-bfb2-7cd65707de5e" />
+
+
 ### 2. Установка Gazebo Ionic
 
 ```bash
@@ -65,6 +80,14 @@ gz sim --version
 # Должно вывести версию Gazebo Sim
 ```
 
+```bash
+# Запуск пустого мира
+gz sim empty.sdf
+# Должно открыться окно Gazebo с пустым миром
+```
+<img width="1194" height="1034" alt="image" src="https://github.com/user-attachments/assets/6c6a428e-3382-4219-897c-b896abfbfdb9" />
+
+
 ### 3. Установка ros-gz bridge
 
 ```bash
@@ -77,9 +100,18 @@ sudo apt install ros-kilted-ros-gz
 Проверка установки:
 
 ```bash
-ros2 pkg list | grep ros_gz
-# Должно показать пакеты ros_gz
+# Терминал 1: Запустите Gazebo с демо-миром
+gz sim -v4 -r shapes.sdf
+
+# Терминал 2: Запустите bridge
+ros2 run ros_gz_bridge parameter_bridge /clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock
+
+# Терминал 3: Проверьте топик
+ros2 topic echo /clock
+# Должны видеть временные метки
 ```
+<img width="1786" height="1044" alt="image" src="https://github.com/user-attachments/assets/88826cb9-714a-4daf-a7d3-5a5e258d9963" />
+
 
 ### 4. Установка MAVROS
 
@@ -88,9 +120,15 @@ sudo apt install ros-kilted-mavros ros-kilted-mavros-extras
 ```
 
 ```bash
-ros2 pkg list | grep mavros
-# Должно показать пакеты mavros
+# Запустите MAVROS (даже без подключения к FCU)
+ros2 run mavros mavros_node --ros-args -p fcu_url:=udp://:14540@localhost:14580
+
+# В другом терминале проверьте топики
+ros2 topic list | grep mavros
+# Должен показать список топиков MAVROS
 ```
+<img width="1629" height="567" alt="image" src="https://github.com/user-attachments/assets/2fa1e5d7-ea0a-483f-a211-9b605d5cc70b" />
+
 
 ### 5. Установка инструментов сборки
 ```bash
@@ -112,7 +150,10 @@ sudo apt install libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev -y
 # Скачивание QGroundControl
 wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl-x86_64.AppImage
 chmod +x QGroundControl-x86_64.AppImage
+./QGroundControl-x86_64.AppImage
 ```
+<img width="1377" height="1043" alt="image" src="https://github.com/user-attachments/assets/b4640c20-8f84-40da-8a22-2fe1b0c91a90" />
+
 
 ### 7. Установка PX4 Autopilot
 ```bash
@@ -120,14 +161,18 @@ sudo apt install git
 git clone https://github.com/PX4/PX4-Autopilot.git --recursive
 bash ./PX4-Autopilot/Tools/setup/ubuntu.sh --no-sim-tools
 ```
+**Обязательно перегружаем компьютер!**
 
 Проверка установки:
 
 ```bash
 cd ~/PX4-Autopilot
-make px4_sitl --no-start
-# Должно успешно собраться
+make px4_sitl gz_x500
+
+# Отдельно запустите QGroundControl
 ```
+<img width="1839" height="1046" alt="image" src="https://github.com/user-attachments/assets/748e4415-e4ff-460b-b017-da5e99a815a6" />
+
 
 ### 8. Установка Micro-XRCE-DDS-Agent (опционально, но желательно)
 ```bash
@@ -139,6 +184,15 @@ cmake ..
 make
 sudo make install
 sudo ldconfig /usr/local/lib/
+```
+
+```bash
+# Запуск
+MicroXRCEAgent udp4 -p 8888
+
+# Вывод должен быть примерно такой
+[1753517454.939337] info     | UDPv4AgentLinux.cpp | init                     | running...             | port: 8888
+[1753517454.939492] info     | Root.cpp           | set_verbose_level        | logger setup           | verbose_level: 4
 ```
 
 ### 9. Настройка PX4 для кастомной модели дрона
@@ -169,6 +223,9 @@ sudo nano CMakeLists.txt
 4022_gz_x500_mono_cam_forward_down_drone
 ```
 
+<img width="822" height="577" alt="image" src="https://github.com/user-attachments/assets/a0150d66-4057-4265-ac5d-8c66895738c2" />
+
+
 ### 10. Настройка переменных окружения
 ```bash
 echo "export GZ_SIM_RESOURCE_PATH=\$HOME/Firmware2/src/aerobot_gz_sim/worlds:\$HOME/Firmware2/src/aerobot_gz_sim/models:\${GZ_SIM_RESOURCE_PATH}" >> ~/.bashrc
@@ -176,6 +233,9 @@ source ~/.bashrc
 ```
 
 ### 11. Запуск
+Запустите QGroundControl
+
+Далее:
 ```bash
 cd ~
 git clone https://github.com/AurunChill/Firmware2
@@ -184,4 +244,6 @@ chmod +x launch.sh
 ./launch.sh
 ```
 
-Выбираете нужный файл:
+<img width="1835" height="1003" alt="image" src="https://github.com/user-attachments/assets/21d6e560-a61a-4b0e-a32f-4e1fe640f5c5" />
+
+Некоторое время после запуска в QGroundControl будет надпись "Not Ready". Подождите пару секунд
