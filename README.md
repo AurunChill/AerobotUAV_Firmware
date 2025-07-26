@@ -1,1 +1,187 @@
-# Firmware2
+# Aerobot Gazebo Simulation
+
+Симуляция дрона с использованием ROS2 Kilted, Gazebo Ionic и PX4 Autopilot.
+
+## Требования
+
+### Системные требования
+- **ОС**: Ubuntu 24.04 LTS
+- **RAM**: минимум 12GB (рекомендуется 16GB)
+- **Диск**: минимум 30GB свободного места
+- **CPU**: 4+ ядра
+
+### Версии программного обеспечения
+- **ROS2**: Kilted
+- **Gazebo**: Ionic
+- **PX4-Autopilot**: 1.15.4
+- **QGroundControl**: latest stable
+- **Python**: 3.10+
+
+## Установка
+
+### 1. Установка ROS2 Kilted
+
+Убедитесь, что ваши локали поддерживают UTF-8:
+```bash
+locale  # должен показать UTF-8
+sudo apt update && sudo apt upgrade
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+
+# Установка ros-apt-source
+sudo apt install curl
+export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F\" '{print $4}')
+curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo $VERSION_CODENAME)_all.deb"
+sudo dpkg -i /tmp/ros2-apt-source.deb
+
+# Установка ROS2 Kilted
+sudo apt update && sudo apt upgrade
+sudo apt install ros-kilted-desktop
+```
+
+Настройка окружения:
+```bash
+echo "source /opt/ros/kilted/setup.bash" >> ~/.bashrc && source ~/.bashrc
+```
+
+Проверка установки ROS2:
+```bash
+ros2 --version
+# Должно вывести: ros2 <версия>
+```
+
+### 2. Установка Gazebo Ionic
+
+```bash
+sudo curl https://packages.osrfoundation.org/gazebo.gpg --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
+sudo apt-get update
+sudo apt-get install gz-ionic
+```
+
+Проверка установки Gazebo:
+```bash
+gz sim --version
+# Должно вывести версию Gazebo Sim
+```
+
+### 3. Установка ros-gz bridge
+
+```bash
+sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+sudo apt-get update
+sudo apt install ros-kilted-ros-gz
+```
+
+Проверка установки:
+
+```bash
+ros2 pkg list | grep ros_gz
+# Должно показать пакеты ros_gz
+```
+
+### 4. Установка MAVROS
+
+```bash
+sudo apt install ros-kilted-mavros ros-kilted-mavros-extras
+```
+
+```bash
+ros2 pkg list | grep mavros
+# Должно показать пакеты mavros
+```
+
+### 5. Установка инструментов сборки
+```bash
+sudo apt install python3-colcon-common-extensions
+```
+
+```bash
+colcon version-check
+# Должно показать версии colcon
+```
+
+### 6. Установка QGroundControl
+```bash
+sudo usermod -aG dialout "$(id -un)"
+sudo apt install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl -y
+sudo apt install libfuse2 -y
+sudo apt install libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor-dev -y
+
+# Скачивание QGroundControl
+wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl-x86_64.AppImage
+chmod +x QGroundControl-x86_64.AppImage
+```
+
+### 7. Установка PX4 Autopilot
+```bash
+sudo apt install git
+git clone https://github.com/PX4/PX4-Autopilot.git --recursive
+bash ./PX4-Autopilot/Tools/setup/ubuntu.sh --no-sim-tools
+```
+
+Проверка установки:
+
+```bash
+cd ~/PX4-Autopilot
+make px4_sitl --no-start
+# Должно успешно собраться
+```
+
+### 8. Установка Micro-XRCE-DDS-Agent (опционально, но желательно)
+```bash
+git clone https://github.com/eProsima/Micro-XRCE-DDS-Agent.git
+cd Micro-XRCE-DDS-Agent
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+sudo ldconfig /usr/local/lib/
+```
+
+### 9. Настройка PX4 для кастомной модели дрона
+
+Необходимо добавить конфигурацию для нашей модели дрона:
+
+```bash
+cd ~/PX4-Autopilot/ROMFS/px4fmu_common/init.d-posix/airframes
+touch 4022_gz_x500_mono_cam_forward_down_drone
+sudo nano 4022_gz_x500_mono_cam_forward_down_drone
+```
+
+Вставьте следующее содержимое:
+```bash
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=x500_mono_cam_forward_down_drone}
+. ${R}etc/init.d-posix/airframes/4001_gz_x500
+param set COM_OF_LOSS_T 20
+```
+
+Теперь отредактируйте CMakeLists.txt:
+```bash
+cd ~/PX4-Autopilot/ROMFS/px4fmu_common/init.d-posix/airframes
+sudo nano CMakeLists.txt
+```
+
+Добавьте:
+```bash
+4022_gz_x500_mono_cam_forward_down_drone
+```
+
+### 10. Настройка переменных окружения
+```bash
+echo "export GZ_SIM_RESOURCE_PATH=\$HOME/Firmware2/src/aerobot_gz_sim/worlds:\$HOME/Firmware2/src/aerobot_gz_sim/models:\${GZ_SIM_RESOURCE_PATH}" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 11. Запуск
+```bash
+cd ~
+git clone https://github.com/AurunChill/Firmware2
+cd ~/Firmware2
+chmod +x launch.sh
+./launch.sh
+```
+
+Выбираете нужный файл:

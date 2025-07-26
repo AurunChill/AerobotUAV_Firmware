@@ -30,7 +30,7 @@ def generate_launch_description():
 
     spawn_agressivniy_drone1 = ExecuteProcess(
         cmd=[[
-            'PX4_SYS_AUTOSTART=4999 PX4_GZ_MODEL_NAME=uav1 ~/PX4-Autopilot/build/px4_sitl_default/bin/px4 -i 0',
+            'PX4_SYS_AUTOSTART=4022 PX4_GZ_MODEL_NAME=uav1 ~/PX4-Autopilot/build/px4_sitl_default/bin/px4 -i 0',
         ]],
         shell=True
     )
@@ -80,6 +80,7 @@ def generate_launch_description():
                     '/world/default/model/uav1/link/depth_cam_drone/base_link/sensor/depth_cam/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                     '/world/default/model/uav1/link/mono_cam/base_link/sensor/imager/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                     '/world/default/model/uav1/link/mono_cam_down/base_link/sensor/imager/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
+                     '/world/default/model/uav1/link/base_link/sensor/magnetometer_sensor/magnetometer@sensor_msgs/msg/MagneticField@gz.msgs.Magnetometer',
                     '/world/default/clock@rosgraph_msgs/msg/Clock@gz.msgs.Clock',
                     '/world/default/model/uav1/link/mono_cam/base_link/sensor/imager/image@sensor_msgs/msg/Image@gz.msgs.Image',
                     '/world/default/model/uav1/link/depth_cam_drone/base_link/sensor/depth_cam/depth_image@sensor_msgs/msg/Image@gz.msgs.Image',
@@ -93,6 +94,7 @@ def generate_launch_description():
                     ('/world/default/model/uav1/link/depth_cam_drone/base_link/sensor/depth_cam/camera_info', '/uav1/depth_camera_info'),
                     ('/world/default/model/uav1/link/mono_cam/base_link/sensor/imager/camera_info', '/uav1/camera_info'),
                     ('/world/default/model/uav1/link/mono_cam_down/base_link/sensor/imager/camera_info', '/uav1/camera_down_info'),
+                    ('/world/default/model/uav1/link/base_link/sensor/magnetometer_sensor/magnetometer', '/uav1/magnetometer'),
                     ('/world/default/clock', '/clock'),
                     ('/world/default/model/uav1/link/mono_cam/base_link/sensor/imager/image', '/uav1/camera'),
                     ('/world/default/model/uav1/link/depth_cam_drone/base_link/sensor/depth_cam/depth_image', '/uav1/depth_camera'),

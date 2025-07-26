@@ -43,7 +43,7 @@ def generate_launch_description():
 
     spawn_agressivniy_drone1 = ExecuteProcess(
         cmd=[[
-            'PX4_SYS_AUTOSTART=4999 PX4_GZ_MODEL_NAME=uav1 ~/PX4-Autopilot/build/px4_sitl_default/bin/px4 -i 0',
+            'PX4_SYS_AUTOSTART=4022 PX4_GZ_MODEL_NAME=uav1 ~/PX4-Autopilot/build/px4_sitl_default/bin/px4 -i 0',
         ]],
         shell=True
     )
@@ -96,6 +96,7 @@ def generate_launch_description():
                     '/world/default/model/uav1/link/mono_cam/base_link/sensor/imager/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                     '/world/default/model/uav1/link/mono_cam_down/base_link/sensor/imager/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
                     '/world/default/model/uav1/link/depth_cam_drone/base_link/sensor/depth_cam/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo',
+                    '/world/default/model/uav1/link/base_link/sensor/magnetometer_sensor/magnetometer@sensor_msgs/msg/MagneticField@gz.msgs.Magnetometer',
                     '/model/vehicle_qr2/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
                     '/model/vehicle_qr3/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
                     '/model/vehicle_qr4/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist',
@@ -118,6 +119,7 @@ def generate_launch_description():
                     ('/world/default/model/uav1/link/mono_cam_down/base_link/sensor/imager/camera_info', '/uav1/camera_down_info'),
                     ('/world/default/model/uav1/link/depth_cam_drone/base_link/sensor/depth_cam/camera_info', '/uav1/depth_camera_info'),
                     ('/world/default/model/uav1/link/mono_cam/base_link/sensor/imager/image', '/uav1/camera'),
+                    ('/world/default/model/uav1/link/base_link/sensor/magnetometer_sensor/magnetometer', '/uav1/magnetometer'),
                     ('/model/vehicle_qr2/cmd_vel', '/vehicle_qr2/cmd_vel'),
                     ('/model/vehicle_qr3/cmd_vel', '/vehicle_qr3/cmd_vel'),
                     ('/model/vehicle_qr4/cmd_vel', '/vehicle_qr4/cmd_vel'),
