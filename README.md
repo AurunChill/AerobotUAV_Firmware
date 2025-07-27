@@ -51,8 +51,8 @@ echo "source /opt/ros/kilted/setup.bash" >> ~/.bashrc && source ~/.bashrc
 
 Проверка установки ROS2:
 ```bash
-ros2 --version
-# Должно вывести: ros2 <версия>
+ros2
+# Должно вывести доступные аргументы
 ```
 
 ```bash
@@ -120,13 +120,13 @@ ros2 topic echo /clock
 
 ### 4. Установка MAVROS
 ```bash
-wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh
-sudo chmod +x install_geographiclib_datasets.sh
-sudo ./install_geographiclib_datasets.sh
+sudo apt install ros-kilted-mavros ros-kilted-mavros-extras
 ```
 
 ```bash
-sudo apt install ros-kilted-mavros ros-kilted-mavros-extras
+wget https://raw.githubusercontent.com/mavlink/mavros/ros2/mavros/scripts/install_geographiclib_datasets.sh
+sudo chmod +x install_geographiclib_datasets.sh
+sudo ./install_geographiclib_datasets.sh
 ```
 
 ```bash
@@ -255,7 +255,7 @@ source ~/.bashrc
 ```bash
 cd ~
 git clone https://github.com/AurunChill/AerobotUAV_Firmware
-cd ~/Firmware2
+cd ~/AerobotUAV_Firmware
 chmod +x launch.sh
 ./launch.sh
 ```
