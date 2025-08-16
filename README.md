@@ -244,7 +244,7 @@ make px4_sitl
 
 ### 10. Настройка переменных окружения
 ```bash
-echo "export GZ_SIM_RESOURCE_PATH=\$HOME/Firmware2/src/aerobot_gz_sim/worlds:\$HOME/Firmware2/src/aerobot_gz_sim/models:\${GZ_SIM_RESOURCE_PATH}" >> ~/.bashrc
+echo "export GZ_SIM_RESOURCE_PATH=\$HOME/AerobotUAV_Firmware/src/aerobot_gz_sim/worlds:\$HOME/AerobotUAV_Firmware/src/aerobot_gz_sim/models:\${GZ_SIM_RESOURCE_PATH}" >> ~/.bashrc
 source ~/.bashrc
 ```
 
